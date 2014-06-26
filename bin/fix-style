@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# From https://github.com/brainwood/Fix-Style
+
+echo "Fixing style in current git directory from commit ${1:-develop} to ${2:-HEAD}."
+FILESCHANGED=$(git diff-tree --no-commit-id --name-only --diff-filter=AMRT -r ${1:-develop}..${2:-HEAD} | xargs -I {} php-cs-fixer fix {} | wc -l)
+if [ $FILESCHANGED -gt 0 ]
+then
+
+    git add -u
+    git commit -m "Fixed Style"
+fi
