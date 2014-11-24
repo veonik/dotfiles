@@ -3,6 +3,7 @@
 	email = sommertm@gmail.com
 
 [alias]
+    del-merged = "!git branch --merged | grep -v \\* | xargs -n 1 git branch -d"
     assume   = update-index --assume-unchanged
     unassume = update-index --no-assume-unchanged
     assumed  = "!git ls-files -v | grep ^h | cut -c 3-"
@@ -15,6 +16,7 @@
 	ap = add --patch
 	au = add --update
 	authors = "!git log --pretty=format:%aN | sort | uniq -c | sort -rn"
+    commits = "log --pretty=oneline --shortstat --abbrev-commit"
 	b = branch
 	c = commit
 	ca = commit --amend
@@ -38,7 +40,8 @@
 	pick = cherry-pick
 	prune-remotes = "!for remote in `git remote`; do git remote prune $remote; done"
 	r = remote
-	ra = !git log --graph --abbrev-commit --date=relative -20 --all --pretty='format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
+    relra = !git log --graph --abbrev-commit --date=relative -20 --pretty='format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
+    ra = !git log --graph --abbrev-commit --date=relative -20 --all --pretty='format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
 	rb = rebase
 	rba = rebase --abort
 	rbc = rebase --continue
@@ -54,8 +57,9 @@
 	stl = stash list
 	stp = stash pop
 	undo = reset --soft HEAD^
-	wd = diff --color-words
-	wds = diff --color-words --staged
+	wd = diff --word-diff
+	wds = diff --word-diff --staged
+    wdc = diff --word-diff --cached
 	push = push --tags
 	stat = status
     meld = difftool --dir-diff
@@ -114,7 +118,7 @@
 	excludesfile = ~/.gitignore
 	whitespace = trailing-space,space-before-tab
 	quotepath = false
-	autocrlf = false
+	autocrlf = input
 
 [rerere]
 	enabled = 1
@@ -131,3 +135,6 @@
 	tool = meld
 [treediff "meld"]
 	cmd = git-meld-cmd
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
