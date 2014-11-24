@@ -8,9 +8,9 @@ export EDITOR="mate2 -w" # --line %d %s"
 export SVN_EDITOR="mate2 -w"
 
 export RUBYOPTS="rubygems"
-
+export GOPATH=$HOME/go
 # Stuff in my ~
-export PATH="/opt/local/Library/Frameworks/Python.framework/Versions/3.3/bin:/opt/local/bin:/usr/local/pear/bin:${HOME}/.rbenv/bin:${HOME}/bin:${PATH}"
+export PATH="/opt/local/Library/Frameworks/Python.framework/Versions/3.3/bin:/opt/local/bin:/usr/local/pear/bin:${HOME}/.rbenv/bin:${HOME}/bin:$GOPATH/bin:${PATH}"
 
 export LC_CTYPE="en_US.UTF-8"
 export LC_MESSAGES="en_US.UTF-8"
@@ -32,6 +32,20 @@ alias fpm55_start='sudo launchctl load /Library/LaunchDaemons/org.macports.php55
 alias fpm55_stop='sudo launchctl unload /Library/LaunchDaemons/org.macports.php55-fpm.plist'
 alias fpm55_restart='fpm55_stop; fpm55_start'
 
+alias mongostart="sudo mongod -f /opt/local/etc/mongodb/mongod.conf"
+
+mongostop_func () {
+      local mongopid=`less /opt/local/var/db/mongodb_data/mongod.lock`;
+        if [[ $mongopid =~ [[:digit:]] ]]; then
+                  sudo kill -15 $mongopid;
+                        echo mongod process $mongopid terminated;
+                          else
+                                    echo mongo process $mongopid not exist;
+                                      fi
+                                  }
+
+                                  alias mongostop="mongostop_func"
+
 # postgres
 alias pg_start='sudo launchctl load -w /Library/LaunchDaemons/org.macports.postgresql91-server.plist'
 alias pg_stop='sudo launchctl unload /Library/LaunchDaemons/org.macports.postgresql91-server.plist'
@@ -48,7 +62,7 @@ alias redis_restart='redis_stop; redis_start'
 
 
 alias fix_localhost='sudo apachectl restart; fpm55_restart;'
-
+alias myip='dig +short myip.opendns.com @resolver1.opendns.com'
 
 alias sf2init='rm -rf app/cache/* app/logs/*; sudo chmod +a "_www allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs; sudo chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs'
 
@@ -63,6 +77,11 @@ hidden() {
   fi
   killall Finder
 }
+
+export GOROOT="/usr/local/go"
+export GOPATH="/Users/Tyler/go"
+launchctl setenv GOROOT $GOROOT
+launchctl setenv GOPATH $GOPATH
 
 ## keybindings (run 'bindkeys' for details, more details via man zshzle)
 # use emacs style per default:
@@ -164,7 +183,7 @@ setopt prompt_subst
 # Combined left and right prompt configuration.
 local smiley="%(?,%F{green}☺%f,%F{red}☹%f)"
 
-PROMPT='%m %B%F{red}:: %F{green}%3~ ${smiley} %F{blue}%(0!.#.») %b%f'
+PROMPT='%F{blue}:: %F{white}%3~ ${smiley} %F{blue}%(0!.#.») %b%f'
 RPROMPT='%F{white} $(rbenv version-name) $(~/bin/git-cwd-info.rb)%f'
 
 # TODO LSCOLORS and LS_COLORS don't define the same color scheme
@@ -277,6 +296,22 @@ alias httpdump='sudo tcpdump -i en0 -n -s 0 -w - | grep -a -o -E "Host\: .*|GET 
 function mkcd () {
     mkdir -p "$*"
     cd "$*"
+}
+
+function shareacl () {
+    rootDir="app"
+    if [ "$1" != "" ]; then
+        rootDir="$1"
+    fi
+    
+    shareWith="_www"
+    if [ "$2" != "" ]; then
+        shareWith="$2"
+    fi
+
+    rm -rf "$rootDir/cache/*" "$rootDir/logs/*" "$rootDir/files/*"
+    sudo chmod +a "$shareWith allow delete,write,append,file_inherit,directory_inherit" "$rootDir/cache" "$rootDir/logs" "$rootDir/files"
+    sudo chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" "$rootDir/cache" "$rootDir/logs" "$rootDir/files"
 }
 
 function ydl () {
@@ -405,3 +440,4 @@ pd() {
   projDir=$(pro search $1)
   cd ${projDir}
 }
+
