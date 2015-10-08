@@ -8,5 +8,4 @@ if [ $FILESCHANGED -gt 0 ]
 then
 
     git add -u
-    git commit -m "Fixed Style"
 fi

@@ -60,6 +60,7 @@ alias redis_start='sudo launchctl load /Library/LaunchDaemons/org.macports.redis
 alias redis_stop='sudo launchctl unload /Library/LaunchDaemons/org.macports.redis.plist'
 alias redis_restart='redis_stop; redis_start'
 
+alias fuck='$(thefuck $(fc -ln -1))'
 
 alias fix_localhost='sudo apachectl restart; fpm55_restart;'
 alias myip='dig +short myip.opendns.com @resolver1.opendns.com'
@@ -78,7 +79,7 @@ hidden() {
   killall Finder
 }
 
-export GOROOT="/usr/local/go"
+export GOROOT="/opt/local/go"
 export GOPATH="/Users/Tyler/go"
 launchctl setenv GOROOT $GOROOT
 launchctl setenv GOPATH $GOPATH
