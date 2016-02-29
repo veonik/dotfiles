@@ -2,87 +2,27 @@
 source ~/.git-hubflow-completion.zsh
 source ~/.git-flow-completion.zsh
 
-# From bash
-export VISUAL="mate2 -w"
-export EDITOR="mate2 -w" # --line %d %s"
-export SVN_EDITOR="mate2 -w"
+# Go configuration
 
-export RUBYOPTS="rubygems"
 export GOPATH=$HOME/go
-# Stuff in my ~
-export PATH="/opt/local/Library/Frameworks/Python.framework/Versions/3.3/bin:/opt/local/bin:/usr/local/pear/bin:${HOME}/.rbenv/bin:${HOME}/bin:$GOPATH/bin:${PATH}"
+export GOROOT=/usr/local/go
 
+launchctl setenv GOROOT $GOROOT
+launchctl setenv GOPATH $GOPATH
+
+# From bash
+export VISUAL="mate -w"
+export EDITOR="mate -w" # --line %d %s"
+export SVN_EDITOR="mate -w"
+
+# Stuff in my ~
+export PATH="${GOROOT}/bin:/opt/local/libexec/gnubin:/opt/local/bin:${HOME}/bin:${GOPATH}/bin:${PATH}"
+
+# Force UTF-8
 export LC_CTYPE="en_US.UTF-8"
 export LC_MESSAGES="en_US.UTF-8"
 export LC_COLLATE="en_US.UTF-8"
 export LANG="en_US.UTF-8"
-
-# php53-fpm
-alias fpm53_start='sudo launchctl load /Library/LaunchDaemons/org.macports.php53-fpm.plist'
-alias fpm53_stop='sudo launchctl unload /Library/LaunchDaemons/org.macports.php53-fpm.plist'
-alias fpm53_restart='fpm53_stop; fpm53_start'
-
-# php54-fpm
-alias fpm54_start='sudo launchctl load /Library/LaunchDaemons/org.macports.php54-fpm.plist'
-alias fpm54_stop='sudo launchctl unload /Library/LaunchDaemons/org.macports.php54-fpm.plist'
-alias fpm54_restart='fpm54_stop; fpm54_start'
-
-# php55-fpm
-alias fpm55_start='sudo launchctl load /Library/LaunchDaemons/org.macports.php55-fpm.plist'
-alias fpm55_stop='sudo launchctl unload /Library/LaunchDaemons/org.macports.php55-fpm.plist'
-alias fpm55_restart='fpm55_stop; fpm55_start'
-
-alias mongostart="sudo mongod -f /opt/local/etc/mongodb/mongod.conf"
-
-mongostop_func () {
-      local mongopid=`less /opt/local/var/db/mongodb_data/mongod.lock`;
-        if [[ $mongopid =~ [[:digit:]] ]]; then
-                  sudo kill -15 $mongopid;
-                        echo mongod process $mongopid terminated;
-                          else
-                                    echo mongo process $mongopid not exist;
-                                      fi
-                                  }
-
-                                  alias mongostop="mongostop_func"
-
-# postgres
-alias pg_start='sudo launchctl load -w /Library/LaunchDaemons/org.macports.postgresql91-server.plist'
-alias pg_stop='sudo launchctl unload /Library/LaunchDaemons/org.macports.postgresql91-server.plist'
-
-# nginx
-alias nginx_start='sudo launchctl load -w /Library/LaunchDaemons/org.macports.nginx.plist'
-alias nginx_stop='sudo launchctl unload -w /Library/LaunchDaemons/org.macports.nginx.plist'
-alias nginx_restart='nginx_stop; nginx_start;'
-
-# redis
-alias redis_start='sudo launchctl load /Library/LaunchDaemons/org.macports.redis.plist'
-alias redis_stop='sudo launchctl unload /Library/LaunchDaemons/org.macports.redis.plist'
-alias redis_restart='redis_stop; redis_start'
-
-alias fuck='$(thefuck $(fc -ln -1))'
-
-alias fix_localhost='sudo apachectl restart; fpm55_restart;'
-alias myip='dig +short myip.opendns.com @resolver1.opendns.com'
-
-alias sf2init='rm -rf app/cache/* app/logs/*; sudo chmod +a "_www allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs; sudo chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/cache app/logs'
-
-hidden() {
-  if [ "$(defaults read com.apple.finder AppleShowAllFiles)" = 0 ]
-      then 
-        defaults write com.apple.finder AppleShowAllFiles 1
-        echo "Showing all hidden files."
-      else 
-        defaults write com.apple.finder AppleShowAllFiles 0
-        echo "Hiding all hidden files."
-  fi
-  killall Finder
-}
-
-export GOROOT="/opt/local/go"
-export GOPATH="/Users/Tyler/go"
-launchctl setenv GOROOT $GOROOT
-launchctl setenv GOPATH $GOPATH
 
 ## keybindings (run 'bindkeys' for details, more details via man zshzle)
 # use emacs style per default:
@@ -94,7 +34,7 @@ bindkey -e
 # Enable Ctrl-x-e to edit command line
 autoload -U edit-command-line
 # Emacs style
-zle -N edit-command-line
+# zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
@@ -185,7 +125,7 @@ setopt prompt_subst
 local smiley="%(?,%F{green}☺%f,%F{red}☹%f)"
 
 PROMPT='%F{blue}:: %F{white}%3~ ${smiley} %F{blue}%(0!.#.») %b%f'
-RPROMPT='%F{white} $(rbenv version-name) $(~/bin/git-cwd-info.rb)%f'
+RPROMPT='%F{white} $(~/bin/git-cwd-info.rb)%f'
 
 # TODO LSCOLORS and LS_COLORS don't define the same color scheme
 export LSCOLORS=gxfxcxdxbxegedabagacad
@@ -282,8 +222,21 @@ alias r-x='chmod 755'
 #########################################################################################
 # Custom aliases/commands
 
-# Convert a picture to a favicon
-alias make-favicon="convert -colors 256 -resize 16x16 "
+alias fuck='$(thefuck $(fc -ln -1))'
+
+alias myip='dig +short myip.opendns.com @resolver1.opendns.com'
+
+hidden() {
+  if [ "$(defaults read com.apple.finder AppleShowAllFiles)" = 0 ]
+      then 
+        defaults write com.apple.finder AppleShowAllFiles 1
+        echo "Showing all hidden files."
+      else 
+        defaults write com.apple.finder AppleShowAllFiles 0
+        echo "Hiding all hidden files."
+  fi
+  killall Finder
+}
 
 # Copy the working dir to the clipboard
 alias cpwd='pwd|xargs echo -n|pbcopy'
@@ -315,10 +268,6 @@ function shareacl () {
     sudo chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" "$rootDir/cache" "$rootDir/logs" "$rootDir/files"
 }
 
-function ydl () {
-    for url ($*) /usr/bin/python /usr/local/bin/youtube-dl --continue --literal --console-title --format 22 "$url" || /usr/bin/python /usr/local/bin/youtube-dl --continue --literal --console-title "$url"
-}
-
 # If bcat (Browser cat, http://rtomayko.github.com/bcat/) is invoked as `btee', it acts like `tee(1)'
 alias btee=bcat
 
@@ -332,8 +281,6 @@ alias dotedit="$VISUAL ~/dotfiles/"
 
 alias sha1='openssl dgst -sha1'
 alias sha256='openssl dgst -sha256'
-
-alias wk2png='/usr/bin/python $(which webkit2png)'
 
 function console {
   if [[ $# > 0 ]]; then
@@ -352,37 +299,6 @@ alias e.="${EDITOR} ."
 
 alias m='mate'
 alias m.='mate .'
-
-alias v='mvim'
-alias v.='mvim .'
-
-#########################################################################################
-# Ruby aliases/functions
-
-# For Rails:
-alias sc='./script/console'
-alias sg='./script/generate'
-alias ss='./script/server'
-alias sd='./script/destroy'
-
-alias pryr="pry -r ./config/environment -r rails/console/app -r rails/console/helpers"
-
-function heftiest {
-    for file in $(find app/$1/**/*.rb -type f); do wc -l $file ; done  | sort -r | head
-}
-
-# Rubinius
-
-function rbx () {
-    if [[ -x $(which -s rbx) ]]
-    then
-        command rbx "$@"
-    else
-        ${HOME}/Development/Rubinius/bin/rbx "$@"
-    fi
-}
-
-alias weebuild='rake build && ./bin/mspec'
 
 #########################################################################################
 # Git aliases/functions
@@ -433,12 +349,4 @@ function preexec () {
 # use .localrc for settings specific to one system
 [[ -f ~/.localrc ]] && source ~/.localrc
 
-# rbenv
-eval "$(rbenv init -)"
-builtin rehash
-# pro cd function
-pd() {
-  projDir=$(pro search $1)
-  cd ${projDir}
-}
 
