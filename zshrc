@@ -1,22 +1,9 @@
 # Sourced in interactive shells
-source ~/.git-hubflow-completion.zsh
-source ~/.git-flow-completion.zsh
-
-# Go configuration
-
-export GOPATH=$HOME/go
-export GOROOT=/usr/local/go
-
-launchctl setenv GOROOT $GOROOT
-launchctl setenv GOPATH $GOPATH
 
 # From bash
 export VISUAL="mate -w"
-export EDITOR="mate -w" # --line %d %s"
+export EDITOR="mate -w"
 export SVN_EDITOR="mate -w"
-
-# Stuff in my ~
-export PATH="${GOROOT}/bin:/opt/local/libexec/gnubin:/opt/local/bin:${HOME}/bin:${GOPATH}/bin:${PATH}"
 
 # Force UTF-8
 export LC_CTYPE="en_US.UTF-8"
@@ -27,6 +14,8 @@ export LANG="en_US.UTF-8"
 ## keybindings (run 'bindkeys' for details, more details via man zshzle)
 # use emacs style per default:
 bindkey -e
+bindkey '^[[1;9C' forward-word
+bindkey '^[[1;9D' backward-word
 
 # use vi style:
 # bindkey -v
@@ -122,10 +111,10 @@ autoload -U colors; colors;
 
 setopt prompt_subst
 # Combined left and right prompt configuration.
-local smiley="%(?,%F{green}☺%f,%F{red}☹%f)"
+local smiley="%(?,%F{green}✓%f,%F{red}✕%f)"
 
-PROMPT='%F{blue}:: %F{white}%3~ ${smiley} %F{blue}%(0!.#.») %b%f'
-RPROMPT='%F{white} $(~/bin/git-cwd-info.rb)%f'
+PROMPT='$(~/bin/powerline-zsh -m compatible $?)'
+RPROMPT='%F{white}${timer_show} $(~/bin/git-cwd-info.rb)%f'
 
 # TODO LSCOLORS and LS_COLORS don't define the same color scheme
 export LSCOLORS=gxfxcxdxbxegedabagacad
@@ -228,10 +217,10 @@ alias myip='dig +short myip.opendns.com @resolver1.opendns.com'
 
 hidden() {
   if [ "$(defaults read com.apple.finder AppleShowAllFiles)" = 0 ]
-      then 
+      then
         defaults write com.apple.finder AppleShowAllFiles 1
         echo "Showing all hidden files."
-      else 
+      else
         defaults write com.apple.finder AppleShowAllFiles 0
         echo "Hiding all hidden files."
   fi
@@ -251,25 +240,6 @@ function mkcd () {
     mkdir -p "$*"
     cd "$*"
 }
-
-function shareacl () {
-    rootDir="app"
-    if [ "$1" != "" ]; then
-        rootDir="$1"
-    fi
-    
-    shareWith="_www"
-    if [ "$2" != "" ]; then
-        shareWith="$2"
-    fi
-
-    rm -rf "$rootDir/cache/*" "$rootDir/logs/*" "$rootDir/files/*"
-    sudo chmod +a "$shareWith allow delete,write,append,file_inherit,directory_inherit" "$rootDir/cache" "$rootDir/logs" "$rootDir/files"
-    sudo chmod +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" "$rootDir/cache" "$rootDir/logs" "$rootDir/files"
-}
-
-# If bcat (Browser cat, http://rtomayko.github.com/bcat/) is invoked as `btee', it acts like `tee(1)'
-alias btee=bcat
 
 # sh function to murder all running processes matching a pattern
 # thanks 3n: http://twitter.com/3n/status/19113206105
@@ -338,15 +308,20 @@ function title () {
 
 # precmd is called just before the prompt is printed
 function precmd () {
+    timer_show=""
+    if (($+timer)) then
+      local elapsed=$(($SECONDS - $timer))
+	  unset timer
+      if [[ $elapsed -gt 0 ]]; then
+        timer_show="%F{white} ${elapsed}"
+      fi
+    fi
     title "zsh" "$USER@%m" "%55<...<%~"
 }
 
 # preexec is called just before any command line is executed
 function preexec () {
+    timer=${timer:-$SECONDS}
     title "$1" "$USER@%m" "%35<...<%~"
 }
-
-# use .localrc for settings specific to one system
-[[ -f ~/.localrc ]] && source ~/.localrc
-
 
