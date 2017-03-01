@@ -5,6 +5,8 @@ export VISUAL="mate -w"
 export EDITOR="mate -w"
 export SVN_EDITOR="mate -w"
 
+export LESS="-R"
+
 # Force UTF-8
 export LC_CTYPE="en_US.UTF-8"
 export LC_MESSAGES="en_US.UTF-8"
