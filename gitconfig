@@ -74,7 +74,7 @@
 [diff]
 	renames = copies
 	mnemonicprefix = true
-	tool = araxis
+    tool = idiff
 	algorithm = default
 
 [difftool]
@@ -121,16 +121,20 @@
 	autocrlf = input
 
 [rerere]
-	enabled = 1
+	enabled = true
 
 [merge]
-    tool = araxis
+    tool = imerge
 
 [diff "zip"]
   textconv = unzip -c -a
 
 [github]
 	user = tyler-sommer
+[mergetool "imerge"]
+    cmd = /Users/tylersommer/bin/idea merge "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+[difftool "idiff"]
+    cmd = /Users/tylersommer/bin/idea diff "$LOCAL" "$REMOTE"
 [treediff]
 	tool = meld
 [treediff "meld"]
@@ -138,3 +142,8 @@
 [filter "media"]
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f

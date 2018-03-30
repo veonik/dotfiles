@@ -1,5 +1,20 @@
 # Sourced in interactive shells
 
+# Macports
+export PATH="/opt/local/bin:${PATH}"
+
+# User bin
+export PATH="${HOME}/bin:/usr/local/bin:${PATH}"
+
+# GNU coreutils
+export PATH="/opt/local/libexec/gnubin:${PATH}"
+
+# pyenv, rvm
+export PATH="${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${RBENV_ROOT}/bin:${RBENV_ROOT}/shims:${PATH}"
+
+# /usr/local/go
+export PATH="${GOROOT}/bin:${PATH}"
+
 # From bash
 export VISUAL="mate -w"
 export EDITOR="mate -w"
@@ -25,7 +40,7 @@ bindkey '^[[1;9D' backward-word
 # Enable Ctrl-x-e to edit command line
 autoload -U edit-command-line
 # Emacs style
-# zle -N edit-command-line
+zle -N edit-command-line
 bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
@@ -327,3 +342,9 @@ function preexec () {
     title "$1" "$USER@%m" "%35<...<%~"
 }
 
+function dtop () {
+    docker stats $(docker ps --format={{.Names}})
+}
+
+# Rust env
+source $HOME/.cargo/env

@@ -8,6 +8,8 @@ export RUBYOPTS="rubygems"
 # Stuff in my ~
 export PATH="/opt/local/bin:/usr/local/pear/bin:${HOME}/.rbenv/bin:${HOME}/bin:${PATH}"
 
+export PATH="${PATH}:/usr/local/kafka/bin"
+
 export LC_CTYPE="en_US.UTF-8"
 export LC_MESSAGES="en_US.UTF-8"
 export LC_COLLATE="en_US.UTF-8"
@@ -46,3 +48,5 @@ alias sf2init='rm -rf app/files/* app/cache/* app/logs/*; sudo chmod +a "_www al
 # The orginal version is saved in .bash_profile.pysave
 PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
 export PATH
+
+export PATH="$HOME/.cargo/bin:$PATH"
