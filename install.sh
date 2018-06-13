@@ -20,7 +20,3 @@ for file in "$BASE"/bin/*; do
     ln -sf "$BASE/bin/$filename" ~/bin/$filename
 done
 
-# Special case: Make bin/git-reup a link to git-up
-if [[ -e ~/bin/git-up ]]; then
-    ln -sf ~/bin/git-up ~/bin/git-reup
-fi
