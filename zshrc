@@ -330,7 +330,7 @@ function precmd () {
       local elapsed=$(($SECONDS - $timer))
 	  unset timer
       if [[ $elapsed -gt 0 ]]; then
-        timer_show="%F{white} ${elapsed}"
+        timer_show="%F{white}${elapsed}s"
       fi
     fi
     title "zsh" "$USER@%m" "%55<...<%~"
