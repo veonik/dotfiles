@@ -1,13 +1,19 @@
 # Sourced in interactive shells
 
+current_uname=$(uname)
+darwin() {
+	[[ "$current_uname" == "Darwin" ]] && return 0
+	return 1
+}
+
 # Macports
-export PATH="/opt/local/bin:${PATH}"
+darwin && export PATH="/opt/local/bin:${PATH}"
 
 # User bin
 export PATH="${HOME}/bin:/usr/local/bin:${PATH}"
 
 # GNU coreutils
-export PATH="/opt/local/libexec/gnubin:${PATH}"
+darwin && export PATH="/opt/local/libexec/gnubin:${PATH}"
 
 # pyenv, rvm
 export PATH="${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${RBENV_ROOT}/bin:${RBENV_ROOT}/shims:${PATH}"
@@ -16,9 +22,9 @@ export PATH="${PYENV_ROOT}/shims:${PYENV_ROOT}/bin:${RBENV_ROOT}/bin:${RBENV_ROO
 export PATH="${GOROOT}/bin:${PATH}"
 
 # From bash
-export VISUAL="mate -w"
-export EDITOR="mate -w"
-export SVN_EDITOR="mate -w"
+darwin && export VISUAL="mate -w"
+darwin && export EDITOR="mate -w"
+darwin && export SVN_EDITOR="mate -w"
 
 export LESS="-R"
 
@@ -347,4 +353,10 @@ function dtop () {
 }
 
 # Rust env
-source $HOME/.cargo/env
+[ -d "$HOME/.cargo" ] && source $HOME/.cargo/env
+
+# Load RVM into a shell session *as a function*
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+[ -d "$HOME/.rvm/bin" ] && export PATH="$PATH:$HOME/.rvm/bin"

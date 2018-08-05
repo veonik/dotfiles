@@ -88,7 +88,8 @@
 	autosetupmerge = true
 
 [color]
-	ui = auto
+	ui = true
+	status = always
 
 [color "branch"]
 	current = yellow reverse

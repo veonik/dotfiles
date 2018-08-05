@@ -13,7 +13,7 @@
 # The methods that get called more than once are memoized.
 
 def git_repo_path
-  @git_repo_path ||= `git rev-parse --git-dir 2>/dev/null`.strip
+  @git_repo_path ||= `git rev-parse --git-dir > /dev/null 2>&1`.strip
 end
 
 def in_git_repo
